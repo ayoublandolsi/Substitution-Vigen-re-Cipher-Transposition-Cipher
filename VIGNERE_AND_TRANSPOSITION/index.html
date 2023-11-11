@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Columnar Transposition Cipher</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Columnar Transposition Cipher</h1>
+        <label for="message">Enter Message:</label>
+        <input type="text" required id="message" placeholder="Enter your message...">
+        <label for="key">Enter Key:</label>
+        <input type="text" id="key" required placeholder="Enter encryption key...">
+        <button onclick="encrypt()">Encrypt</button>
+        <button onclick="decrypt()">Decrypt</button>
+        <button onclick="cryptoAnalyse()">cryptoanalyse</button>        
+        
+        <div id="encryptionSteps"></div>
+        <div id="decryptionSteps"></div>
+    </div>
+    <div id="output"></div>
+    <!-- Ajoutez un conteneur pour le tableau de cryptanalyse -->
+<div class="analysis-container">
+    <div id="cryptoAnalysis"></div>
+</div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

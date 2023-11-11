@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigenère Cipher</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input {
+            padding: 8px;
+            margin-bottom: 20px;
+            width: 60%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        #table {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* Ajout d'une animation de fondu */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Application de l'animation au résultat de la cryptanalyse */
+        #resultat-analyse {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vigenère Cipher</h1>
+    <div>
+        <label for="message">Message:</label>
+        <input type="text" id="message" placeholder="Enter your message">
+    </div>
+    <div>
+        <label for="key">Key:</label>
+        <input type="text" id="key" placeholder="Enter the key">
+    </div>
+    <div>
+        <button onclick="chiffrer()">Encrypt</button>
+        <button onclick="dechiffrer()">Decrypt</button>
+        <button onclick="cryptanalyse()">Cryptanalysis</button>
+        <button onclick="trouverLongueurCle()">Afficher la longueur de la clé</button>
+        <input type="file" id="fileInput" accept=".txt">
+        <button onclick="detecterMotChiffre()">Détecter le mot dans le dictionnaire</button>
+    </div>
+    <div id="tableauResultats"></div>
+    <div id="resultat-analyse"></div>
+    <div id="table">
+        <h2>Table</h2>
+        <div id="result"></div>
+        <table id="cryptanalysis-table"></table>
+    </div>
+    <div id="resultat-chiffre"></div>
+    <div id="resultat-dechiffre"></div>
+    
+
+    <script> const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      function chiffrer() {
+          const text = document.getElementById('message').value.toUpperCase();
+          const key = document.getElementById('key').value.toUpperCase().repeat(text.length);
+          let result = '';
+
+          let tableBox = document.getElementById("table");
+          let table = document.getElementById("cryptanalysis-table");
+
+          table.innerHTML = '';
+
+          let headerRow = table.insertRow();
+          let firstHeaderCell = headerRow.insertCell();
+          firstHeaderCell.innerHTML = "encrypt";
+
+          for (let k = 0; k < 26; k++) {
+              let headerCell = headerRow.insertCell();
+              headerCell.innerHTML = String.fromCharCode(65 + k);
+          }
+
+          for (let i = 0; i < 26; i++) {
+              let row = table.insertRow();
+              let labelCell = row.insertCell();
+              labelCell.innerHTML = String.fromCharCode(65 + i);
+
+              for (let j = 0; j < 26; j++) {
+                  let cell = row.insertCell();
+                  let val = String.fromCharCode(65 + ((i + j) % 26));
+                  cell.innerHTML = val;
+              }
+          }
+
+          for (let i = 0; i < text.length; i++) {
+              let x = text.charCodeAt(i) - 65;
+              let y = key.charCodeAt(i) - 65;
+              if (x >= 0 && x < 26) {
+                  result += String.fromCharCode((x + y) % 26 + 65);
+              }
+              else {
+                  result += text.charAt(i);
+              }
+          }
+
+          document.getElementById('result').innerText = result;
+          tableBox.style.display = "block";
+      }
+
+      function dechiffrer() {
+          const text = document.getElementById('message').value.toUpperCase();
+          const key = document.getElementById('key').value.toUpperCase().repeat(text.length);
+          let result = '';
+
+          let tableBox = document.getElementById("table");
+          let table = document.getElementById("cryptanalysis-table");
+
+          table.innerHTML = '';
+
+          let headerRow = table.insertRow();
+          let firstHeaderCell = headerRow.insertCell();
+          firstHeaderCell.innerHTML = "decrypt";
+
+          for (let k = 0; k < 26; k++) {
+              let headerCell = headerRow.insertCell();
+              headerCell.innerHTML = String.fromCharCode(65 + k);
+          }
+
+          for (let i = 0; i < 26; i++) {
+              let row = table.insertRow();
+              let labelCell = row.insertCell();
+              labelCell.innerHTML = String.fromCharCode(65 + i);
+
+              for (let j = 0; j < 26; j++) {
+                  let cell = row.insertCell();
+                  let val = String.fromCharCode(65 + ((j + i) % 26)); // Corrected the order of addition
+                  cell.innerHTML = val;
+              }
+          }
+
+          for (let i = 0; i < text.length; i++) {
+              let x = text.charCodeAt(i) - 65;
+              let y = key.charCodeAt(i) - 65;
+              if (x >= 0 && x < 26) {
+                  result += String.fromCharCode(65 + (x - y + 26) % 26);
+              }
+              else {
+                  result += text.charAt(i);
+              }
+          }
+
+          document.getElementById('result').innerText = result;
+          tableBox.style.display = "block";
+      }
+
+      function cryptanalyse() {
+          const text = document.getElementById('message').value;
+          let result = '<table><tr><th>Key\\cryptanalyse Message</th>';
+          for (let i = 0; i <= 25; i++) {
+              result += '<th>' + String.fromCharCode(i + 65) + '</th>'; // column headers
+          }
+          result += '</tr>';
+
+          for (let key = 0; key <= 25; key++) {
+              let actualKey = String.fromCharCode(key + 65); // Key is mapped to a character. e.g., 0 => 'A', 1 => 'B',..
+              result += '<tr><td>' + actualKey + '</td>'; // row header
+              for (let i = 0; i < text.length; i++) {
+                  let c = text.charCodeAt(i);
+                  let keyCode = key % 26;
+                  let offset = isUppercase(c) ? 65 : 97;
+                  let encrypted = '';
+
+                  if (isUppercase(c) || isLowercase(c)) {
+                      encrypted = String.fromCharCode(((c - offset + keyCode) % 26) + offset);
+                  } else {
+                      encrypted = text.charAt(i);
+                  }
+                  result += '<td>' + encrypted + '</td>';
+              }
+              result += '</tr>';
+          }
+          result += "</table>";
+          document.getElementById('result').innerHTML = result;
+      }
+
+      function afficherLongueurCle() {
+          const cle = document.getElementById('key').value;
+          const longueurCle = cle.length;
+
+          const element = document.createElement("div");
+          element.innerHTML = "<p>Longueur de la clé : " + longueurCle + "</p>";
+          document.getElementById("resultat-analyse").innerHTML = "";
+          document.getElementById("resultat-analyse").appendChild(element);
+      }
+
+      function detecterMotChiffre() {
+          const motChiffre = document.getElementById('message').value.toUpperCase();
+          const fileInput = document.getElementById('fileInput');
+
+          const file = fileInput.files[0];
+          if (!file) {
+              alert("Veuillez sélectionner un fichier de dictionnaire.");
+              return;
+          }
+
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+              const dictionnaireContenu = e.target.result;
+              const dictionnaireMots = dictionnaireContenu.split('\n').map(mot => mot.trim());
+
+              let motTrouve = false;
+
+              for (let i = 0; i < dictionnaireMots.length; i++) {
+                  if (motChiffre.includes(dictionnaireMots[i])) {
+                      motTrouve = true;
+                      break;
+                  }
+              }
+
+              if (motTrouve) {
+                  alert("Le mot chiffré existe dans le dictionnaire !");
+              } else {
+                  alert("Le mot chiffré n'existe pas dans le dictionnaire.");
+              }
+          };
+
+          reader.readAsText(file);
+      }
+
+      function isUppercase(c) {
+          return 65 <= c && c <= 90;
+      }
+
+      function isLowercase(c) {
+          return 97 <= c && c <= 122;
+      }
+      // Récupération du texte chiffré à partir de l'élément HTML avec l'id 'texteChiffre'
+      function trouverLongueurCle() {
+    const texteChiffre = document.getElementById('message').value.toUpperCase();
+    var sequencesRepetees = {};
+
+    // Analyse des répétitions de séquences de 2 à 8 caractères
+    for (var longueurSequence = 2; longueurSequence <= 8; longueurSequence++) {
+        for (var i = 0; i < texteChiffre.length - longueurSequence + 1; i++) {
+            var sequence = texteChiffre.substring(i, i + longueurSequence);
+            var position = texteChiffre.indexOf(sequence, i + 1);
+            while (position !== -1) {
+                var espace = position - i;
+                var sequenceRepetee = texteChiffre.substring(i, i + longueurSequence);
+                if (sequencesRepetees[sequenceRepetee]) {
+                    sequencesRepetees[sequenceRepetee].push(espace);
+                } else {
+                    sequencesRepetees[sequenceRepetee] = [espace];
+                }
+                position = texteChiffre.indexOf(sequence, position + 1);
+            }
+        }
+    }
+
+    // Générer le tableau HTML
+    var tableauHtml = '<table><tr><th>Séquence</th><th>Espace</th><th>Facteurs premiers</th></tr>';
+
+    for (var sequence in sequencesRepetees) {
+        var espaces = sequencesRepetees[sequence];
+        for (var i = 0; i < espaces.length; i++) {
+            var espace = espaces[i];
+            var longueurSequence = sequence.length;
+            var facteurPremier = longueurSequence + '-' + (longueurSequence - 1);
+            tableauHtml += '<tr><td>' + sequence + '</td><td>' + espace + '</td><td>' + facteurPremier + '</td></tr>';
+        }
+    }
+
+    tableauHtml += '</table>';
+
+    // Affichage du tableau sur la page dans un élément avec l'id 'tableauResultats'
+    var tableauResultats = document.getElementById('tableauResultats');
+    tableauResultats.innerHTML = tableauHtml;
+
+    afficherLongueurCle();
+}
+
+
+
+    </script>
+</body>
+</html>

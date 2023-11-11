@@ -1,0 +1,81 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Set minimum height to cover the entire viewport */
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    max-width: 400px; /* Set maximum width for the container */
+    width: 100%; /* Ensure the container takes up the available width */
+    padding: 20px; /* Add padding inside the container */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+input, button {
+    margin: 20px;
+    padding: 5px;
+    font-size: 16px; /* Taille de la police */
+    border: 1px solid #ccc; /* Bordure de l'élément */
+    border-radius: 5px; /* Coins arrondis */
+}
+
+button {
+    cursor: pointer;
+    background-color: #4CAF50; /* Couleur de fond pour les boutons */
+    color: white; /* Couleur du texte des boutons */
+}
+
+.green {
+    background-color: #0be113; /* Couleur de fond verte pour les lignes identiques */
+}
+
+
+#output {
+    display: flex;
+    position: relative;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+#encryptionSteps {
+    margin-top: 20px;
+}
+.analysis-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 20px; /* Ajouter une marge en haut de l'ensemble du conteneur */
+    overflow-x: auto; /* Ajouter un défilement horizontal si le contenu est trop large */
+}
+
+#cryptoAnalysis {
+    flex: 1;
+    margin-right: 20px;
+}
+
+#output {
+    flex: 1;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin-top: 20px; /* Ajouter une marge en haut du tableau */
+}
+
+table, th, td {
+    border: 1px solid #000;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+.green {
+    background-color: #14e61b; /* Couleur de fond verte pour les lignes identiques */
+}
